@@ -7,6 +7,7 @@ import withAuth from "../withAuth";
 
 const initialRecipeData = {
     name: "",
+    imageUrl: "",
     instructions: "",
     category: "Breakfast",
     description: "",
@@ -23,7 +24,7 @@ const AddRecipe = ({session, history}) => {
         setRecipeData({...recipeData, username: session.getCurrentUser.username})
     }, []);
 
-    const {name, category, description, instructions, username} = recipeData;
+    const {name, imageUrl, category, description, instructions, username} = recipeData;
 
     const handleChange = e => {
         const {name, value} = e.target;
@@ -35,7 +36,7 @@ const AddRecipe = ({session, history}) => {
     };
 
     const validateForm = () => {
-        return !name || !category || !description || !instructions;
+        return !name || !imageUrl || !category || !description || !instructions;
     };
 
     const updateCache = (cache, {data: {addRecipe}}) => {
@@ -63,7 +64,7 @@ const AddRecipe = ({session, history}) => {
                       {query: GET_USER_RECIPES, variables: {username}}
                   ]}
                   update={updateCache}
-                  variables={{name, category, description, instructions, username}}>
+                  variables={{name, imageUrl, category, description, instructions, username}}>
             {(addRecipe, {data, loading, error}) => (
                     <div className="App">
                         <h2 className="App">Add Recipe</h2>
@@ -73,6 +74,11 @@ const AddRecipe = ({session, history}) => {
                                    value={name}
                                    onChange={handleChange}
                                    placeholder="Recipe Name"/>
+                            <input type="text"
+                                   name="imageUrl"
+                                   value={imageUrl}
+                                   onChange={handleChange}
+                                   placeholder="Recipe Image"/>
                             <select name="category"
                                     value={category}
                                     onChange={handleChange}>
