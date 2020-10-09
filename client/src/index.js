@@ -18,9 +18,9 @@ import AddRecipe from "./components/Recipe/AddRecipe";
 import RecipePage from "./components/Recipe/RecipePage";
 
 const client = new ApolloClient({
-    uri: 'https://recipes-app-gql.herokuapp.com/graphql',
+    uri: "https://recipes-app-gql.herokuapp.com/graphql",
     fetchOptions: {
-        credentials: "include"
+        credentials: true
     },
     request: operation => {
         const token = localStorage.getItem('token');
