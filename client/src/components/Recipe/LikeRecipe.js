@@ -69,9 +69,13 @@ const LikeRecipe = ({refetch, session, _id}) => {
                               variables={{_id, username}}>
                         {
                             likeRecipe => <>
-                                {username && <button onClick={() => handleClick(likeRecipe, unlikeRecipe)}>
-                                    {liked ? 'Unlike' : 'Like'}
-                                </button>}
+                                {username && (
+                                    <button
+                                        className="like-button"
+                                        onClick={() => handleClick(likeRecipe, unlikeRecipe)}>
+                                        {liked ? 'Unlike' : 'Like'}
+                                    </button>
+                                )}
                             </>
                         }
                     </Mutation>

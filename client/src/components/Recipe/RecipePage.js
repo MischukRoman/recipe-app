@@ -16,13 +16,32 @@ const RecipePage = ({match}) => {
                 const {name, category, description, instructions, likes, username} = data.getRecipe;
                 return (
                     <div className="App">
-                        <h2>{name}</h2>
-                        <p>Category: {category}</p>
-                        <p>Description: {description}</p>
-                        <p>Instructions: {instructions}</p>
-                        <p>Likes: {likes}</p>
-                        <p>Created By: {username}</p>
-                        <LikeRecipe _id={_id}/>
+                        <div style={{background: `url(${data.getRecipe.imageUrl}) center center / cover no-repeat`}}
+                             className="recipe-image"/>
+                        <div className="recipe">
+                            <div className="recipe-header">
+                                <h2 className="recipe-name">
+                                    <strong>{name}</strong>
+                                </h2>
+                                <h5>
+                                    <strong>{category}</strong>
+                                </h5>
+                                <p>
+                                    Created by <strong>{username}</strong>
+                                </p>
+                                <p>
+                                    {likes} <span role="img" aria-label="heart">❤️</span>
+                                </p>
+                            </div>
+                            <blockquote className="recipe-description">
+                                {description}
+                            </blockquote>
+                            <h3 className="recipe-instructions__title">Instructions</h3>
+                            <div className="recipe-instructions">
+                                {instructions}
+                            </div>
+                            <LikeRecipe _id={_id}/>
+                        </div>
                     </div>
                 )
             }}
