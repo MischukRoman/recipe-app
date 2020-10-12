@@ -29,13 +29,16 @@ const AddRecipe = ({session, history}) => {
 
     const handleChange = e => {
         const {name, value} = e.target;
-        console.log('recipeData', recipeData);
-        setRecipeData({...recipeData, [name]: value})
+        setRecipeData((prevData) => (
+            {...prevData, [name]: value}
+        ));
     };
 
     const handleEditorChange = e => {
         const newContent = e.editor.getData();
-        setRecipeData({...recipeData, instructions: newContent})
+        setRecipeData((prevData) => (
+            {...prevData, instructions: newContent}
+        ))
     };
 
     const clearRecipeData = () => {
@@ -58,7 +61,6 @@ const AddRecipe = ({session, history}) => {
 
     const handleSubmit = (e, addRecipe) => {
         e.preventDefault();
-
         addRecipe().then(async ({data}) => {
             clearRecipeData();
             history.push('/');
@@ -107,7 +109,7 @@ const AddRecipe = ({session, history}) => {
                         <CKEditor
                             name="instructions"
                             content={instructions}
-                            event={{change: handleEditorChange}}
+                            events={{change: handleEditorChange}}
                         />
                         <button type="submit"
                                 disabled={loading || validateForm()}
