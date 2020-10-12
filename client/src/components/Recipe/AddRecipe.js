@@ -4,6 +4,7 @@ import {ADD_RECIPE, GET_ALL_RECIPES, GET_CURRENT_USER, GET_USER_RECIPES} from ".
 import {Error} from "../Error";
 import {withRouter} from "react-router-dom";
 import withAuth from "../withAuth";
+import CKEditor from "react-ckeditor-component";
 
 const initialRecipeData = {
     name: "",
@@ -28,7 +29,13 @@ const AddRecipe = ({session, history}) => {
 
     const handleChange = e => {
         const {name, value} = e.target;
+        console.log('recipeData', recipeData);
         setRecipeData({...recipeData, [name]: value})
+    };
+
+    const handleEditorChange = e => {
+        const newContent = e.editor.getData();
+        setRecipeData({...recipeData, instructions: newContent})
     };
 
     const clearRecipeData = () => {
@@ -66,44 +73,50 @@ const AddRecipe = ({session, history}) => {
                   update={updateCache}
                   variables={{name, imageUrl, category, description, instructions, username}}>
             {(addRecipe, {data, loading, error}) => (
-                    <div className="App">
-                        <h2 className="App">Add Recipe</h2>
-                        <form className="form" onSubmit={(e) => handleSubmit(e, addRecipe)}>
-                            <input type="text"
-                                   name="name"
-                                   value={name}
-                                   onChange={handleChange}
-                                   placeholder="Recipe Name"/>
-                            <input type="text"
-                                   name="imageUrl"
-                                   value={imageUrl}
-                                   onChange={handleChange}
-                                   placeholder="Recipe Image"/>
-                            <select name="category"
-                                    value={category}
-                                    onChange={handleChange}>
-                                <option value="Breakfast">Breakfast</option>
-                                <option value="Lunch">Lunch</option>
-                                <option value="Dinner">Dinner</option>
-                                <option value="Snack">Snack</option>
-                            </select>
-                            <input type="text"
-                                   name="description"
-                                   value={description}
-                                   onChange={handleChange}
-                                   placeholder="Add descriptions"/>
-                            <textarea name="instructions"
-                                      value={instructions}
-                                      onChange={handleChange}
-                                      placeholder="Add instructions"/>
-                            <button type="submit"
-                                    disabled={loading || validateForm()}
-                                    className="button-primary">Submit
-                            </button>
-                            {error && <Error error={error}/>}
-                        </form>
-                    </div>
-                )
+                <div className="App">
+                    <h2 className="App">Add Recipe</h2>
+                    <form className="form" onSubmit={(e) => handleSubmit(e, addRecipe)}>
+                        <input type="text"
+                               name="name"
+                               value={name}
+                               onChange={handleChange}
+                               placeholder="Recipe Name"/>
+                        <input type="text"
+                               name="imageUrl"
+                               value={imageUrl}
+                               onChange={handleChange}
+                               placeholder="Recipe Image"/>
+                        <select name="category"
+                                value={category}
+                                onChange={handleChange}>
+                            <option value="Breakfast">Breakfast</option>
+                            <option value="Lunch">Lunch</option>
+                            <option value="Dinner">Dinner</option>
+                            <option value="Snack">Snack</option>
+                        </select>
+                        <input type="text"
+                               name="description"
+                               value={description}
+                               onChange={handleChange}
+                               placeholder="Add descriptions"/>
+                        {/*<textarea name="instructions"
+                                  value={instructions}
+                                  onChange={handleChange}
+                                  placeholder="Add instructions"/>*/}
+                        <label htmlFor="instructions">Add instructions</label>
+                        <CKEditor
+                            name="instructions"
+                            content={instructions}
+                            event={{change: handleEditorChange}}
+                        />
+                        <button type="submit"
+                                disabled={loading || validateForm()}
+                                className="button-primary">Submit
+                        </button>
+                        {error && <Error error={error}/>}
+                    </form>
+                </div>
+            )
             }
         </Mutation>
     )

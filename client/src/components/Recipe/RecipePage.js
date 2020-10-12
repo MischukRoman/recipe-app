@@ -37,9 +37,8 @@ const RecipePage = ({match}) => {
                                 {description}
                             </blockquote>
                             <h3 className="recipe-instructions__title">Instructions</h3>
-                            <div className="recipe-instructions">
-                                {instructions}
-                            </div>
+                            <div className="recipe-instructions"
+                                 dangerouslySetInnerHTML={{__html: instructions}}/>
                             <LikeRecipe _id={_id}/>
                         </div>
                     </div>
