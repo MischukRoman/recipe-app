@@ -4,6 +4,7 @@ import {withRouter} from 'react-router-dom';
 import {Query} from 'react-apollo';
 import {GET_RECIPE} from "../../queries";
 import LikeRecipe from "./LikeRecipe";
+import Spinner from "../Spinner";
 
 const RecipePage = ({match}) => {
     const {_id} = match.params;
@@ -11,7 +12,7 @@ const RecipePage = ({match}) => {
     return (
         <Query query={GET_RECIPE} variables={{_id}}>
             {({data, loading, error}) => {
-                if (loading) return <div>Loading...</div>;
+                if (loading) return <Spinner/>;
                 if (error) return <div>Error</div>;
                 const {name, category, description, instructions, likes, username} = data.getRecipe;
                 return (
