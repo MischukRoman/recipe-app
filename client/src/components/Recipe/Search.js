@@ -21,6 +21,7 @@ const Search = () => {
             {client => (
                 <div className="App">
                     <input type="search"
+                           className={"search"}
                            placeholder="Search for Recipes"
                            onChange={async e => handleChange(e, client)}/>
                     <ul>
