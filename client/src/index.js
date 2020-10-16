@@ -18,8 +18,8 @@ import AddRecipe from "./components/Recipe/AddRecipe";
 import RecipePage from "./components/Recipe/RecipePage";
 
 const client = new ApolloClient({
-    uri: "https://recipes-app-gql.herokuapp.com/graphql",
-    /*uri: "http://localhost:4444/graphql",*/
+    /*uri: "https://recipes-app-gql.herokuapp.com/graphql",*/
+    uri: "http://localhost:4444/graphql",
     fetchOptions: {
         credentials: true
     },
