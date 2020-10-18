@@ -1,19 +1,42 @@
-import React from 'react';
-import {Link} from "react-router-dom";
-import {Query, Mutation} from "react-apollo";
+import React, {useState} from 'react';
+import {Link} from 'react-router-dom';
+import {Query, Mutation} from 'react-apollo';
 
-import {DELETE_USER_RECIPE, GET_ALL_RECIPES, GET_CURRENT_USER, GET_USER_RECIPES} from "../../queries";
-import Spinner from "../Spinner";
+import {DELETE_USER_RECIPE, GET_ALL_RECIPES, GET_CURRENT_USER, GET_USER_RECIPES} from '../../queries';
+import Spinner from '../Spinner';
 
 const UserRecipes = ({username}) => {
+    const [changedRecipe, setChangedRecipe] = useState({
+        _id: '',
+        name: '',
+        imageUrl: '',
+        category: '',
+        description: '',
+        modal: false
+    });
+
+    const {modal} = changedRecipe;
+
+
+    const handleChange = event => {
+        const {name, value} = event.target;
+        setChangedRecipe(prev => ({...prev, [name]: value}));
+    };
 
     const handleDelete = deleteUserRecipe => {
         const confirmDelete = window.confirm('Are you sure you want to delete this recipe?');
         if (confirmDelete) {
             deleteUserRecipe().then(({data}) => {
                 /*console.log(data);*/
-            })
+            });
         }
+    };
+
+    const closeModal = () => {
+        setChangedRecipe(prev => ({...prev, modal: false}));
+    };
+    const loadRecipe = (recipe) => {
+        setChangedRecipe({...recipe, modal: true});
     };
 
     return (
@@ -23,7 +46,9 @@ const UserRecipes = ({username}) => {
                 if (error) return <div>Error</div>;
                 return (
                     <ul>
-                        <EditRecipeModal/>
+                        {modal && <EditRecipeModal changedRecipe={changedRecipe}
+                                                   handleChange={handleChange}
+                                                   closeModal={closeModal}/>}
                         <h3>Your Recipes</h3>
                         {!data.getUserRecipes.length && <p><strong>You have not added any recipes yet</strong></p>}
                         {
@@ -53,14 +78,16 @@ const UserRecipes = ({username}) => {
                                                           data: {
                                                               getUserRecipes: getUserRecipes.filter(recipe => recipe._id !== deleteUserRecipe._id)
                                                           }
-                                                      })
+                                                      });
 
                                                   }}>
                                             {(deleteUserRecipe, attrs = {}) => (
                                                 <div>
-                                                    <button className={"button-primary"}>Update</button>
+                                                    <button className={'button-primary'}
+                                                            onClick={() => loadRecipe(recipe)}>Update
+                                                    </button>
                                                     <p onClick={() => handleDelete(deleteUserRecipe)}
-                                                       className={"delete-button"}>
+                                                       className={'delete-button'}>
                                                         {attrs.loading ? 'loading...' : 'X'}
                                                     </p>
                                                 </div>
@@ -68,51 +95,68 @@ const UserRecipes = ({username}) => {
                                             }
                                         </Mutation>
                                     </li>
-                                )
+                                );
                             })
                         }
                     </ul>
-                )
+                );
             }}
         </Query>
     )
         ;
 };
 
-const EditRecipeModal = () => (
-    <div className="modal modal-open">
-        <div className="modal-inner">
-            <div className="modal-content">
-                <form className="modal-content-inner">
-                    <h4>Edit Recipe</h4>
+const EditRecipeModal = ({changedRecipe, handleChange, closeModal}) => {
+    const {
+        name,
+        imageUrl,
+        category,
+        description
+    } = changedRecipe;
 
-                    <input type="text"
-                           name="name"
-                           value={name}
-                           onChange={handleChange}
-                           placeholder="Recipe Name"/>
-                    <input type="text"
-                           name="imageUrl"
-                           value={imageUrl}
-                           onChange={handleChange}
-                           placeholder="Recipe Image"/>
-                    <select name="category"
-                            value={category}
-                            onChange={handleChange}>
-                        <option value="Breakfast">Breakfast</option>
-                        <option value="Lunch">Lunch</option>
-                        <option value="Dinner">Dinner</option>
-                        <option value="Snack">Snack</option>
-                    </select>
-                    <input type="text"
-                           name="description"
-                           value={description}
-                           onChange={handleChange}
-                           placeholder="Add descriptions"/>
-                </form>
+    return (
+        <div className="modal modal-open">
+            <div className="modal-inner">
+                <div className="modal-content">
+                    <form className="modal-content-inner">
+                        <h4>Edit Recipe</h4>
+
+                        <input type="text"
+                               name="name"
+                               value={name}
+                               onChange={handleChange}
+                               placeholder="Recipe Name"/>
+                        <input type="text"
+                               name="imageUrl"
+                               value={imageUrl}
+                               onChange={handleChange}
+                               placeholder="Recipe Image"/>
+                        <select name="category"
+                                value={category}
+                                onChange={handleChange}>
+                            <option value="Breakfast">Breakfast</option>
+                            <option value="Lunch">Lunch</option>
+                            <option value="Dinner">Dinner</option>
+                            <option value="Snack">Snack</option>
+                        </select>
+                        <input type="text"
+                               name="description"
+                               value={description}
+                               onChange={handleChange}
+                               placeholder="Add descriptions"/>
+
+                        <hr/>
+                        <div className="modal-buttons">
+                            <button type="submit" className="button-primary">
+                                Update
+                            </button>
+                            <button onClick={closeModal}>Cancel</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 export default UserRecipes;
