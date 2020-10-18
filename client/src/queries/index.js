@@ -1,6 +1,6 @@
-import {gql} from 'apollo-boost'
+import {gql} from 'apollo-boost';
 
-import {recipeFragments} from './fragments'
+import {recipeFragments} from './fragments';
 
 // Recipes Queries
 export const GET_ALL_RECIPES = gql`
@@ -86,6 +86,20 @@ export const DELETE_USER_RECIPE = gql`
    mutation($_id: ID!){
         deleteUserRecipe (_id: $_id) {
             _id
+        }
+    }
+`;
+
+// Update User Recipe
+export const UPDATE_USER_RECIPE = gql`
+   mutation($_id: ID!, $name: String!, $imageUrl: String!, $description: String!, $category: String!){
+        updateUserRecipe (_id: $_id, name: $name, imageUrl: $imageUrl, description: $description, category: $category) {
+            _id
+            name
+            likes
+            category
+            imageUrl
+            description
         }
     }
 `;

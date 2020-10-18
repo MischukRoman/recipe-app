@@ -1,10 +1,10 @@
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
 
 const jwt = require('jsonwebtoken');
 
 const createToken = (user, secret, expiresIn) => {
     const {username, email} = user;
-    return jwt.sign({username, email}, secret, {expiresIn})
+    return jwt.sign({username, email}, secret, {expiresIn});
 };
 
 exports.resolvers = {
@@ -25,9 +25,9 @@ exports.resolvers = {
                 const searchResults = await Recipe.find({
                     $text: {$search: searchTerm}
                 }, {
-                    score: {$meta: "textScore"}
+                    score: {$meta: 'textScore'}
                 }).sort({
-                    score: {$meta: "textScore"}
+                    score: {$meta: 'textScore'}
                 });
                 return searchResults;
             } else {
@@ -55,7 +55,7 @@ exports.resolvers = {
     Mutation: {
         addRecipe: async (root, {name, imageUrl, description, category, instructions, username}, {Recipe}) => {
             const newRecipe = await new Recipe({
-                name, description,imageUrl, category, instructions, username
+                name, description, imageUrl, category, instructions, username
             }).save();
             return newRecipe;
         },
@@ -77,29 +77,38 @@ exports.resolvers = {
             return recipe;
         },
 
+        updateUserRecipe: async (root, {_id, name, imageUrl, description, category}, {Recipe}) => {
+            const updatedRecipe = await Recipe.findOneAndUpdate(
+                {_id},
+                {$set: {name, imageUrl, description, category}},
+                {new: true}
+            );
+            return updatedRecipe;
+        },
+
         signinUser: async (root, {username, password}, {User}) => {
             const user = await User.findOne({username});
             if (!user) {
-                throw new Error('User not found')
+                throw new Error('User not found');
             }
 
             const isValidPassword = await bcrypt.compare(password, user.password);
 
             if (!isValidPassword) throw new Error('Invalid password');
 
-            return {token: createToken(user, process.env.SECRET, '24hr')}
+            return {token: createToken(user, process.env.SECRET, '24hr')};
         },
 
         signupUser: async (root, {username, email, password}, {User}) => {
             const user = await User.findOne({username});
             if (user) {
-                throw new Error('User already exists')
+                throw new Error('User already exists');
             }
 
             const newUser = await new User({
                 username, email, password
             }).save();
-            return {token: createToken(newUser, process.env.SECRET, '24hr')}
+            return {token: createToken(newUser, process.env.SECRET, '24hr')};
         }
     }
 };
