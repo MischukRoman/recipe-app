@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import posed from 'react-pose';
 import './App.css';
 
-import {Query} from 'react-apollo'
-import {GET_ALL_RECIPES} from '../queries'
-import RecipeItem from "./Recipe/RecipeItem";
-import Spinner from "./Spinner";
+import {Query} from 'react-apollo';
+import {GET_ALL_RECIPES} from '../queries';
+import RecipeItem from './Recipe/RecipeItem';
+import Spinner from './Spinner';
 
 const RecipeList = posed.ul({
     shown: {
@@ -23,11 +23,11 @@ const App = () => {
     });
 
     useEffect(() => {
-        setTimeout(slideIn, 200)
+        setTimeout(slideIn, 200);
     }, []);
 
     const slideIn = () => {
-        setState(prevData => ({...prevData, on: !prevData.on}))
+        setState(prevData => ({...prevData, on: !prevData.on}));
     };
 
     return (
@@ -50,7 +50,7 @@ const App = () => {
                                 <RecipeItem key={recipe._id} {...recipe}/>
                             ))}
                         </RecipeList>
-                    )
+                    );
                 }}
             </Query>
         </div>

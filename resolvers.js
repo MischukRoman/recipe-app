@@ -10,54 +10,46 @@ const createToken = (user, secret, expiresIn) => {
 exports.resolvers = {
     Query: {
         getAllRecipes: async (root, args, {Recipe}) => {
-            const allRecipes = await Recipe.find().sort({createdDate: 'desc'});
-            return allRecipes;
+            return await Recipe.find().sort({createdDate: 'desc'});
         },
 
         getRecipe: async (root, {_id}, {Recipe}) => {
-            const recipe = await Recipe.findOne({_id});
-            return recipe;
+            return await Recipe.findOne({_id});
         },
 
         searchRecipes: async (root, {searchTerm}, {Recipe}) => {
             if (searchTerm) {
                 // search{"$text":{"$search":"Fake"}}
-                const searchResults = await Recipe.find({
+                return await Recipe.find({
                     $text: {$search: searchTerm}
                 }, {
                     score: {$meta: 'textScore'}
                 }).sort({
                     score: {$meta: 'textScore'}
                 });
-                return searchResults;
             } else {
-                const recipes = await Recipe.find().sort({likes: 'desc', createdDate: 'desc'});
-                return recipes;
+                return await Recipe.find().sort({likes: 'desc', createdDate: 'desc'});
             }
         },
 
         getCurrentUser: async (root, args, {currentUser, User}) => {
             if (!currentUser) return null;
-            const user = await User.findOne({username: currentUser.username})
+            return await User.findOne({username: currentUser.username})
                 .populate({
                     path: 'favorites',
                     model: 'Recipe'
                 });
-            console.log('user: ', user);
-            return user;
         },
 
         getUserRecipes: async (root, {username}, {Recipe}) => {
-            const userRecipes = await Recipe.find({username}).sort({createdDate: 'desc'});
-            return userRecipes;
+            return await Recipe.find({username}).sort({createdDate: 'desc'});
         }
     },
     Mutation: {
         addRecipe: async (root, {name, imageUrl, description, category, instructions, username}, {Recipe}) => {
-            const newRecipe = await new Recipe({
+            return await new Recipe({
                 name, description, imageUrl, category, instructions, username
             }).save();
-            return newRecipe;
         },
 
         likeRecipe: async (root, {_id, username}, {Recipe, User}) => {
@@ -73,17 +65,15 @@ exports.resolvers = {
         },
 
         deleteUserRecipe: async (root, {_id}, {Recipe}) => {
-            const recipe = await Recipe.findOneAndRemove({_id});
-            return recipe;
+            return await Recipe.findOneAndRemove({_id});
         },
 
         updateUserRecipe: async (root, {_id, name, imageUrl, description, category}, {Recipe}) => {
-            const updatedRecipe = await Recipe.findOneAndUpdate(
+            return await Recipe.findOneAndUpdate(
                 {_id},
                 {$set: {name, imageUrl, description, category}},
                 {new: true}
             );
-            return updatedRecipe;
         },
 
         signinUser: async (root, {username, password}, {User}) => {

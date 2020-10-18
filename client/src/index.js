@@ -1,25 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
+import ApolloClient from 'apollo-boost';
+import {ApolloProvider} from 'react-apollo';
 
 import App from './components/App';
+import Signin from './components/Auth/Signin';
+import Signup from './components/Auth/Signup';
+import {withSession} from './components/withSession';
+import Navbar from './components/Navbar';
+import Search from './components/Recipe/Search';
+import Profile from './components/Profile/Profile';
+import AddRecipe from './components/Recipe/AddRecipe';
+import RecipePage from './components/Recipe/RecipePage';
 
 import './index.css';
 
-import ApolloClient from 'apollo-boost';
-import {ApolloProvider} from 'react-apollo';
-import Signin from "./components/Auth/Signin";
-import Signup from "./components/Auth/Signup";
-import {withSession} from "./components/withSession";
-import Navbar from "./components/Navbar";
-import Search from "./components/Recipe/Search";
-import Profile from "./components/Profile/Profile";
-import AddRecipe from "./components/Recipe/AddRecipe";
-import RecipePage from "./components/Recipe/RecipePage";
-
 const client = new ApolloClient({
     /*uri: "https://recipes-app-gql.herokuapp.com/graphql",*/
-    uri: "http://localhost:4444/graphql",
+    uri: 'http://localhost:4444/graphql',
     fetchOptions: {
         credentials: true
     },
@@ -29,7 +28,7 @@ const client = new ApolloClient({
             headers: {
                 authorization: token
             }
-        })
+        });
     },
     onError: ({networkError}) => {
         if (networkError) {

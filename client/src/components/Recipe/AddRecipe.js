@@ -1,28 +1,27 @@
 import React, {useEffect, useState} from 'react';
 import {Mutation} from 'react-apollo';
-import {ADD_RECIPE, GET_ALL_RECIPES, GET_CURRENT_USER, GET_USER_RECIPES} from "../../queries";
-import {Error} from "../Error";
-import {withRouter} from "react-router-dom";
-import withAuth from "../withAuth";
-import CKEditor from "react-ckeditor-component";
+import {ADD_RECIPE, GET_ALL_RECIPES, GET_CURRENT_USER, GET_USER_RECIPES} from '../../queries';
+import {Error} from '../Error';
+import {withRouter} from 'react-router-dom';
+import withAuth from '../withAuth';
+import CKEditor from 'react-ckeditor-component';
 
 const initialRecipeData = {
-    name: "",
-    imageUrl: "",
-    instructions: "",
-    category: "Breakfast",
-    description: "",
-    username: ""
+    name: '',
+    imageUrl: '',
+    instructions: '',
+    category: 'Breakfast',
+    description: '',
+    username: ''
 };
 
 const AddRecipe = ({session, history}) => {
-
     const [recipeData, setRecipeData] = useState({
         ...initialRecipeData
     });
 
     useEffect(() => {
-        setRecipeData({...recipeData, username: session.getCurrentUser.username})
+        setRecipeData({...recipeData, username: session.getCurrentUser.username});
     }, []);
 
     const {name, imageUrl, category, description, instructions, username} = recipeData;
@@ -38,11 +37,11 @@ const AddRecipe = ({session, history}) => {
         const newContent = e.editor.getData();
         setRecipeData((prevData) => (
             {...prevData, instructions: newContent}
-        ))
+        ));
     };
 
     const clearRecipeData = () => {
-        setRecipeData({...initialRecipeData})
+        setRecipeData({...initialRecipeData});
     };
 
     const validateForm = () => {
@@ -64,7 +63,7 @@ const AddRecipe = ({session, history}) => {
         addRecipe().then(async ({data}) => {
             clearRecipeData();
             history.push('/');
-        })
+        });
     };
 
     return (
@@ -101,10 +100,6 @@ const AddRecipe = ({session, history}) => {
                                value={description}
                                onChange={handleChange}
                                placeholder="Add descriptions"/>
-                        {/*<textarea name="instructions"
-                                  value={instructions}
-                                  onChange={handleChange}
-                                  placeholder="Add instructions"/>*/}
                         <label htmlFor="instructions">Add instructions</label>
                         <CKEditor
                             name="instructions"
@@ -118,10 +113,9 @@ const AddRecipe = ({session, history}) => {
                         {error && <Error error={error}/>}
                     </form>
                 </div>
-            )
-            }
+            )}
         </Mutation>
-    )
+    );
 };
 
 export default withAuth(session => session && session.getCurrentUser)(withRouter(AddRecipe));

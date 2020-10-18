@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {ApolloConsumer} from 'react-apollo';
 
-import {SEARCH_RECIPES} from "../../queries";
-import SearchItem from "./SearchItem";
+import {SEARCH_RECIPES} from '../../queries';
+import SearchItem from './SearchItem';
 
 const Search = () => {
     const [searchResult, setSearchResult] = useState([]);
@@ -13,7 +13,7 @@ const Search = () => {
             query: SEARCH_RECIPES,
             variables: {searchTerm: e.target.value}
         });
-        setSearchResult(data.searchRecipes)
+        setSearchResult(data.searchRecipes);
     };
 
     return (
@@ -21,7 +21,7 @@ const Search = () => {
             {client => (
                 <div className="App">
                     <input type="search"
-                           className={"search"}
+                           className={'search'}
                            placeholder="Search for Recipes"
                            onChange={async e => handleChange(e, client)}/>
                     <ul>

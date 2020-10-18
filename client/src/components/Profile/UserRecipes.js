@@ -21,7 +21,7 @@ const UserRecipes = ({username}) => {
         modal: false
     });
 
-    const {modal} = changedRecipe;
+    const {_id, name, imageUrl, category, description, modal} = changedRecipe;
 
     const handleChange = event => {
         const {name, value} = event.target;
@@ -31,7 +31,6 @@ const UserRecipes = ({username}) => {
     const handlerSubmit = (event, recipe, updateUserRecipe) => {
         event.preventDefault();
         updateUserRecipe({recipe}).then(({data}) => {
-            console.log(data);
             closeModal();
         });
         const {name, value} = event.target;
@@ -41,9 +40,7 @@ const UserRecipes = ({username}) => {
     const handleDelete = deleteUserRecipe => {
         const confirmDelete = window.confirm('Are you sure you want to delete this recipe?');
         if (confirmDelete) {
-            deleteUserRecipe().then(({data}) => {
-                /*console.log(data);*/
-            });
+            deleteUserRecipe();
         }
     };
 
@@ -51,7 +48,6 @@ const UserRecipes = ({username}) => {
         setChangedRecipe(prev => ({...prev, modal: false}));
     };
     const loadRecipe = (recipe) => {
-        console.log('recipe', recipe);
         setChangedRecipe({...recipe, modal: true});
     };
 
@@ -62,7 +58,7 @@ const UserRecipes = ({username}) => {
                 if (error) return <div>Error</div>;
                 return (
                     <ul>
-                        {modal && <EditRecipeModal changedRecipe={changedRecipe}
+                        {modal && <EditRecipeModal changedRecipe={{_id, name, imageUrl, category, description}}
                                                    handlerSubmit={handlerSubmit}
                                                    handleChange={handleChange}
                                                    closeModal={closeModal}/>}
@@ -108,8 +104,7 @@ const UserRecipes = ({username}) => {
                                                         {attrs.loading ? 'loading...' : 'X'}
                                                     </p>
                                                 </div>
-                                            )
-                                            }
+                                            )}
                                         </Mutation>
                                     </li>
                                 );
@@ -119,40 +114,24 @@ const UserRecipes = ({username}) => {
                 );
             }}
         </Query>
-    )
-        ;
+    );
 };
 
 const EditRecipeModal = ({handlerSubmit, changedRecipe, handleChange, closeModal}) => {
     const {
-        _id,
         name,
         imageUrl,
         category,
         description
     } = changedRecipe;
 
-    console.log('changedRecipe', changedRecipe);
-
     return (
-        <Mutation mutation={UPDATE_USER_RECIPE} variables={{
-            _id,
-            name,
-            imageUrl,
-            category,
-            description
-        }}>
+        <Mutation mutation={UPDATE_USER_RECIPE} variables={changedRecipe}>
             {updateUserRecipe => (
                 <div className="modal modal-open">
                     <div className="modal-inner">
                         <div className="modal-content">
-                            <form onSubmit={event => handlerSubmit(event, {
-                                _id,
-                                name,
-                                imageUrl,
-                                category,
-                                description
-                            }, updateUserRecipe)}
+                            <form onSubmit={event => handlerSubmit(event, changedRecipe, updateUserRecipe)}
                                   className="modal-content-inner">
                                 <h4>Edit Recipe</h4>
 

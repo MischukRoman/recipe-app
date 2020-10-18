@@ -2,9 +2,9 @@ import React from 'react';
 import {withRouter} from 'react-router-dom';
 
 import {Query} from 'react-apollo';
-import {GET_RECIPE} from "../../queries";
-import LikeRecipe from "./LikeRecipe";
-import Spinner from "../Spinner";
+import {GET_RECIPE} from '../../queries';
+import LikeRecipe from './LikeRecipe';
+import Spinner from '../Spinner';
 
 const RecipePage = ({match}) => {
     const {_id} = match.params;
@@ -43,10 +43,10 @@ const RecipePage = ({match}) => {
                             <LikeRecipe _id={_id}/>
                         </div>
                     </div>
-                )
+                );
             }}
         </Query>
-    )
+    );
 };
 
 export default withRouter(RecipePage);
